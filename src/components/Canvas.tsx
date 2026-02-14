@@ -116,11 +116,8 @@ export const Canvas: React.FC<CanvasProps> = ({
     ctx.translate(canvasState.viewport.offsetX, canvasState.viewport.offsetY);
     ctx.scale(canvasState.viewport.zoom, canvasState.viewport.zoom);
 
-    // Sort shapes by zIndex
-    const sortedShapes = [...canvasState.shapes].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
-
     // Draw all shapes
-    sortedShapes.forEach(shape => {
+    canvasState.shapes.forEach(shape => {
       drawShape(ctx, shape, roughCanvasRef.current);
 
       // Draw selection box for selected shape
@@ -489,10 +486,7 @@ export const Canvas: React.FC<CanvasProps> = ({
         roughness: canvasState.roughness,
         text,
         fontSize: canvasState.fontSize,
-        fontFamily: canvasState.fontFamily,
-        zIndex: (canvasState.shapes.length > 0 
-          ? Math.max(...canvasState.shapes.map(s => s.zIndex || 0)) + 1 
-          : 0)
+        fontFamily: canvasState.fontFamily
       } as Shape;
       
       const newState = {

@@ -195,29 +195,35 @@ export const useCanvas = () => {
 
   const bringForward = useCallback(() => {
     if (canvasState.selectedShapeId) {
-      const newState = {
-        ...canvasState,
-        shapes: canvasState.shapes.map(shape =>
-          shape.id === canvasState.selectedShapeId
-            ? { ...shape, zIndex: (shape.zIndex || 0) + 1 }
-            : shape
-        )
-      };
-      pushToHistory(newState);
+      const index = canvasState.shapes.findIndex(s => s.id === canvasState.selectedShapeId);
+      if (index < canvasState.shapes.length - 1 && index !== -1) {
+        const newShapes = [...canvasState.shapes];
+        // Swap with the next element
+        [newShapes[index], newShapes[index + 1]] = [newShapes[index + 1], newShapes[index]];
+        
+        const newState = {
+          ...canvasState,
+          shapes: newShapes
+        };
+        pushToHistory(newState);
+      }
     }
   }, [canvasState, pushToHistory]);
 
   const sendBackward = useCallback(() => {
     if (canvasState.selectedShapeId) {
-      const newState = {
-        ...canvasState,
-        shapes: canvasState.shapes.map(shape =>
-          shape.id === canvasState.selectedShapeId
-            ? { ...shape, zIndex: Math.max(0, (shape.zIndex || 0) - 1) }
-            : shape
-        )
-      };
-      pushToHistory(newState);
+      const index = canvasState.shapes.findIndex(s => s.id === canvasState.selectedShapeId);
+      if (index > 0) {
+        const newShapes = [...canvasState.shapes];
+        // Swap with the previous element
+        [newShapes[index], newShapes[index - 1]] = [newShapes[index - 1], newShapes[index]];
+        
+        const newState = {
+          ...canvasState,
+          shapes: newShapes
+        };
+        pushToHistory(newState);
+      }
     }
   }, [canvasState, pushToHistory]);
 

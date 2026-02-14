@@ -30,7 +30,6 @@ export interface BaseShape {
   strokeWidth: number;
   roughness: number;
   rotation?: number;
-  zIndex?: number;
   selected?: boolean;
 }
 
